@@ -1,0 +1,81 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+
+    <ui:define name="titulo">Financeiro</ui:define>
+    <f:metadata>
+        <f:viewParam name="financeiro" value="#{financeiroController.idFinanceiro}" />
+        <f:viewAction action="#{financeiroController.carregarSelectOneMenuCliente()}" />
+    </f:metadata>
+    <ui:define name="corpo">
+
+
+        <h1>Novo financeiro</h1>
+
+        <h:form id="frmCadastro">
+            <p:messages id="messages" autoUpdate="true" closable="true" />
+
+            <p:toolbar style="margin-top: 20px">
+                <p:toolbarGroup>
+                    <p:commandButton value="Salvar" id="botaoSalvar" action="#{financeiroController.salvarFinanceiro()}"  update="frmCadastro"/>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:button  value="Pesquisa" outcome="/financeiro/listarFinanceiro.xhtml" />
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+                         columnClasses="rotulo, campo">
+                <p:outputLabel value="Código" for="codigo"/>
+                <p:inputText id="codigo" size="10" style="width: 290px" maxlength="20" value="#{financeiroController.financeiro.idFinanceiro}"  readonly="true"/>
+
+                <p:outputLabel value="Cliente" for="clientes"/>
+                <p:selectOneMenu filter="true" filterMatchMode="contains"  style="width: 300px" id="clientes" value="#{financeiroController.financeiro.idCliente}" >
+                    <f:selectItem itemLabel="Selecione o cliente" itemValue="#{null}" />
+                    <f:selectItems value="#{financeiroController.clientes}" var="cliente"  itemLabel="#{cliente.nome}" itemValue="#{cliente.idCliente}" />                
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Tipo" for="tipo"/>
+                <p:selectOneMenu style="width: 300px" id="tipo" value="#{financeiroController.financeiro.tipo}" >
+                    <f:selectItem itemLabel="Selecione o tipo do movimento" itemValue="#{null}" />                    
+                    <f:selectItem itemLabel="Entrada" itemValue="E" />                    
+                    <f:selectItem itemLabel="Saída" itemValue="S" />                    
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Forma de pagamento" for="pgt"/>
+                <p:selectOneMenu style="width: 300px" id="pgt" value="#{financeiroController.financeiro.formaPagamento}" >
+                    <f:selectItem itemLabel="Selecione a forma de pagamento" itemValue="#{null}" />                    
+                    <f:selectItem itemLabel="Dinheiro" itemValue="Dinheiro" />                    
+                    <f:selectItem itemLabel="Transferência" itemValue="Transferência" />
+                    <f:selectItem itemLabel="Cartão de Crédito" itemValue="CC" />
+                    <f:selectItem itemLabel="Boleto" itemValue="Boleto" />                    
+                </p:selectOneMenu>
+
+                <p:outputLabel value="Data do movimento" for="dataMov" />
+                <p:calendar  id="dataMov"  locale="pt_BR"  value="#{financeiroController.financeiro.dataMovimento}"   />                              
+
+
+                <p:outputLabel value="Valor" for="valor"/>
+                <p:inputText style="width: 290px" id="valor"   placeholder="R$" value="#{financeiroController.financeiro.valor}" >
+                    <f:convertNumber pattern="#,##0.00" minFractionDigits="2"/>  
+                </p:inputText>
+
+                <p:outputLabel value="Anotações" for="anotacoes" />
+                <p:inputTextarea id="anotacoes"  value="#{financeiroController.financeiro.historico}" rows="15" style="width: 50%;" maxlength="999"   />        
+                
+                 <p:outputLabel value="Situação" for="situacao" />
+                 <p:selectOneMenu style="width: 300px" id="situacao" value="#{financeiroController.financeiro.situacao}" >
+                    <f:selectItem itemLabel="Selecione a situação" itemValue="#{null}" />                    
+                    <f:selectItem itemLabel="Pendente" itemValue="Pendente" />                    
+                    <f:selectItem itemLabel="Recebido" itemValue="Recebido" />                    
+                </p:selectOneMenu>
+
+
+            </p:panelGrid>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,73 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+    <ui:define name="titulo">Clientes</ui:define>
+
+    <ui:define name="corpo">
+        <f:metadata>
+            <f:viewAction action="#{clienteController.listarClientes()}" />
+        </f:metadata>
+
+        <h1>Pesquisa</h1>
+
+        <h:form id="frmPesquisa">
+            <p:messages id="messages" autoUpdate="true" closable="true" />
+
+            <p:toolbar style="margin-top: 20px">
+                <p:toolbarGroup>
+                    <h:panelGrid columns="2">
+                        <p:inputText value="#{clienteController.filtro}" placeholder="Digite aqui o nome do cliente que deseja pesquisar" size="100" />
+                        <p:commandButton value="Buscar" id="botaoBuscar" actionListener="#{clienteController.listarClientes()}"
+                                         update="frmPesquisa" />
+                    </h:panelGrid>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:button value="Novo cliente"
+                              outcome="/cliente/cliente.jsf" />
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <p:panelGrid columns="2" id="painel"
+                         style="width: 100%; margin-top: 20px" columnClasses="rotulo, campo">
+                <p:dataTable value="#{clienteController.clientes}" var="c" id="clientes"
+                             emptyMessage="Nenhum cliente encontrado.">
+                    <p:column headerText="Código">
+                        <p:outputLabel value="#{c.idCliente}"></p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="Nome">
+                        <p:outputLabel value="#{c.nome}"></p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="Telefone">
+                        <p:outputLabel value="#{c.telefone}"></p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="Email">
+                        <p:outputLabel value="#{c.email}"></p:outputLabel>
+                    </p:column>
+
+                    <p:column width="10%" headerText="Ações">
+                        <h:panelGrid columns="2">
+                            <p:button outcome="/cliente/cliente.jsf?cliente=#{c.idCliente}" value="Editar"  ></p:button>
+                            <p:commandButton value="Excluir" update="clientes" action="#{clienteController.deletarCliente(c.idCliente)}"
+                                                   >
+                                <p:confirm header="Confirmação" 
+                                           message="Você tem certeza que deseja excluir esse cliente?"
+                                           icon="ui-icon-alert" />
+                            </p:commandButton>						
+                        </h:panelGrid>
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Sim" type="button" 	styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
